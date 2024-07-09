@@ -1,5 +1,6 @@
 {
     "global": {
+        "appName": "template",
         "DNS": "servidorSQL",
         "autor": "stagude"
     },

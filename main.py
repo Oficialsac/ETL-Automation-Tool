@@ -1,12 +1,21 @@
 from Step import Step
-
+from Orquestador import Orquestador
+import pandas as pd
+orquestador = Orquestador()
 class Tokenizacion(Step):
     def ejecutar(self):
-        return [self.getStepConfig(), self.getGlobalConfig()]
+        dataPath = self.getStepConfig()["dataPath"][0] + "/test.csv"
+        df = pd.read_csv(dataPath)
+        self.setData([df.iloc[0:2], df.columns.to_list()])
         
+class Tokenizacion2(Step):
+    def ejecutar(self):
+        print("Columnas y datos necesarios para este paso", self.getData()["data"]) 
         
 if __name__ == '__main__':
-    StepUno = Tokenizacion()
-    configuracion_del_paso = StepUno.ejecutar()
-    print(configuracion_del_paso)
+    orquestador.Run(
+        [
+            Tokenizacion(), 
+            Tokenizacion2(), 
+         ])
     
