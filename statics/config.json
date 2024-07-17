@@ -4,7 +4,7 @@
         "DNS": "servidorSQL",
         "autor": "stagude"
     },
-    "Tokenizacion":{
+    "Tokenization":{
         "dataPath": ["C:\\Users\\Steve\\Documentos\\orquestador\\statics\\files\\us-patent-phrase-to-phrase-matching"]
     }
 }

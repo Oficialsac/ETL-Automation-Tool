@@ -1,57 +1,110 @@
-from datetime import datetime
-import pandas as pd
-import numpy as np
 import os
-import warnings
+import inspect
 import logging
-from pyspark.sql import SparkSession
 import json 
-import pyodbc
 from ListNode.List import List
+import utils.getClassParams
+from utils.getConfig import Config
+import utils 
+from controllers.ApiController import RunApiServer
 
-class Step():
-    global __list
+class Step:
+    """
+    Step class that manages configuration and data for a specific step in a process.
+    Utilizes a global list to store temporary data.
+    """
+    global __config, __list
+    __config = Config()
     __list = List()
-    print("HAOL CASDASFA")
+    
     def __init__(self):
-        self.getlog = logging.getLogger()
+        """
+        Initializes an instance of the Step class.
+        """
+        self.getlog = logging.getLogger(__name__) 
         self.config = {}
         self.__dataToPass = {}
-        
+        self.userInputs = {}
+        self.kwarg = {}
     
-    def __getConfig(self):
-        configPath = os.path.join(os.getcwd(), 'statics')
-        print(os.listdir(configPath))
-        if "config.json" in os.listdir(configPath):
-            with open(configPath+"\config.json", 'r') as f:
-                self.config["config"] = json.load(f)
-                
-        if len(self.config.values()) != 0:
-            return self.config
-        else:
-            return {}
-        
     def getStepConfig(self):
-        config = self.__getConfig()
-        if self.__class__.__name__ in config["config"].keys():
+        """
+        Retrieves the configuration specific to the current step.
+
+        Returns:
+            dict: The step-specific configuration dictionary.
+        """
+    
+        config = __config.getConfig()  
+        if self.__class__.__name__ in config["config"].keys():  
             return config["config"][self.__class__.__name__]
         else:
-            return {}
+            return {
+                "error": self.__class__.__name__ + "does not exist in configuration file"
+            }
         
     def getGlobalConfig(self):
-        config = self.__getConfig()
-        if "global" in config["config"].keys():
+        """
+        Retrieves the global configuration.
+
+        Returns:
+            dict: The global configuration dictionary.
+        """
+        config = __config.getConfig()  
+        if "global" in config["config"].keys():  
             return config["config"]["global"]
         else:
             return {}
     
     def setData(self, data):
-        self.__dataToPass["data"] = data
-        if __list.isEmpty() == False:
-            __list.deleteNode()
-        __list.addFirst(self.__dataToPass)
+        """
+        Sets data to be passed and stores it in the global list.
+
+        Args:
+            data (any): The data to be stored.
+        """
+        self.__dataToPass["data"] = data  
+        if not __list.isEmpty():  
+            __list.deleteNode()  
+        __list.addFirst(self.__dataToPass) 
         
     def getData(self):
-        if __list.count() != 0:
-            return __list.getData()
+        """
+        Retrieves the stored data from the global list.
+
+        Returns:
+            any: The data stored in the list, if it exists.
+        """
+        if __list.count() != 0:  # Check if the list is not empty
+            return __list.getData()  # Get the data from the list
+    
+    def getApiController(self):
+        params = utils.getClassParams.getParameters(RunApiServer)
+        params = [param for param in params if param != 'kwargs']
+        
+        log = self.getlog
+        print("To create a new API controller, it is necessary to receive some mandatory parameters to run.")
+        
+        for param in params:
+            while True:
+                value = input(f"Please enter a value for the mandatory parameter {param}: ")
+                if value:
+                    self.userInputs[param] = value
+                    y_n = input("You want to create a specific routes (Y/N)")
+                    if y_n.lower() == "y":
+                        self.kwarg["routes_name"] = input("Enter a route name separated by comma (',') ")
+                        self.userInputs.update(self.kwarg)
+                        break
+                    else:
+                        break
+                else:
+                    print(f"{param} is mandatory and cannot be empty.")
+        
+    
+        app = RunApiServer(self.userInputs['server_name'], kwargs=self.kwarg)
+        app.run()
+            
+            
+                
+
         

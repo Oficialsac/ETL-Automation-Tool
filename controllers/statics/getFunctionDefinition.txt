@@ -1,0 +1,12 @@
+import os
+from typing import Union, Dict, Callable
+from fastapi import FastAPI
+import uvicorn
+
+@app.get("/server_name")
+def get_server_name_route():
+    return {"message": "GET Hello World!"}
+
+@app.post("/server_name")
+def post_server_name_route():
+    pass
