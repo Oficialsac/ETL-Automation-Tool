@@ -5,8 +5,10 @@ import json
 from ListNode.List import List
 import utils.getClassParams
 from utils.getConfig import Config
+from utils.createStepConfig import createStepConfig
 import utils 
-from controllers.ApiController import RunApiServer
+from controllers.ApiController.ApiController import RunApiServer
+from controllers.SqlController.SqlController import SqlController
 
 class Step:
     """
@@ -26,6 +28,8 @@ class Step:
         self.__dataToPass = {}
         self.userInputs = {}
         self.kwarg = {}
+                    
+        createStepConfig(self.__class__.__name__)
     
     def getStepConfig(self):
         """
@@ -40,6 +44,7 @@ class Step:
             return config["config"][self.__class__.__name__]
         else:
             return {
+                "code": False,
                 "error": self.__class__.__name__ + "does not exist in configuration file"
             }
         
@@ -77,32 +82,34 @@ class Step:
         """
         if __list.count() != 0:  # Check if the list is not empty
             return __list.getData()  # Get the data from the list
+        
+    def getSql(self):
+        return SqlController()
     
     def getApiController(self):
         params = utils.getClassParams.getParameters(RunApiServer)
         params = [param for param in params if param != 'kwargs']
         
-        log = self.getlog
         print("To create a new API controller, it is necessary to receive some mandatory parameters to run.")
         
         for param in params:
             while True:
-                value = input(f"Please enter a value for the mandatory parameter {param}: ")
+                value = input(f"Please enter a value for the mandatory parameter {param.upper()}: ")
                 if value:
                     self.userInputs[param] = value
-                    y_n = input("You want to create a specific routes (Y/N)")
+                    y_n = input("You need to create a specific port? (Y/N)")
                     if y_n.lower() == "y":
-                        self.kwarg["routes_name"] = input("Enter a route name separated by comma (',') ")
+                        self.kwarg["port"] = input("Enter the specific port: ")
                         self.userInputs.update(self.kwarg)
                         break
                     else:
                         break
                 else:
-                    print(f"{param} is mandatory and cannot be empty.")
+                    print(f"{param.upper()} is mandatory and cannot be empty.")
         
     
         app = RunApiServer(self.userInputs['server_name'], kwargs=self.kwarg)
-        app.run()
+        return app
             
             
                 

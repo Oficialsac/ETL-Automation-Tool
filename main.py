@@ -1,8 +1,7 @@
 from Step import Step
 from Orchestrator import Orchestrator  
 import pandas as pd
-from controllers.ApiController import RunApiServer
-
+from controllers.ApiController.ApiController import RunApiServer
 
 # Initialize an instance of the Orchestrator class
 orchestrator = Orchestrator()
@@ -16,11 +15,14 @@ class Tokenization(Step):
         """
         Reads data from a CSV file specified in the step configuration and sets it for the next step.
         """
-        # data_path = self.getStepConfig()["dataPath"][0] + "/test.csv"
-        # print(data_path)
-        # df = pd.read_csv(data_path)  
-        # self.setData([df.iloc[0:2], df.columns.to_list()])  
-        self.getApiController()
+        sql = self.getSql()
+        
+        df2 = pd.read_csv(r"C:\Users\Steve\Documentos\orquestador\statics\files\us-patent-phrase-to-phrase-matching\train.csv")
+        df2.to_sql("hola2", sql.connection, if_exists="append")
+        print(sql.query("select * from hola2"))
+        
+        
+        
 
 class Tokenization2(Step):
     """
@@ -35,7 +37,7 @@ class Tokenization2(Step):
 
 if __name__ == '__main__':
     # Run the orchestrator with a sequence of steps
-
+    
     orchestrator.run(
         [
             Tokenization(), 
