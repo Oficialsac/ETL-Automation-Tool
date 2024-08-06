@@ -4,7 +4,7 @@ from Step import Step
 import datetime
 import inspect
 from utils.createStepConfig import createStepConfig
-class Orchestrator:
+class Sequencer:
     """
     Orchestrator class that manages and executes a sequence of steps.
     """

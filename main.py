@@ -1,10 +1,10 @@
 from Step import Step
-from Orchestrator import Orchestrator  
+from Sequencer import Sequencer  
 import pandas as pd
 from controllers.ApiController.ApiController import RunApiServer
 
 # Initialize an instance of the Orchestrator class
-orchestrator = Orchestrator()
+sq = Sequencer()
 
 class ApiStepExample(Step):
     """
@@ -96,7 +96,7 @@ class DatabaseStepExample(Step):
 if __name__ == '__main__':
     # Run the orchestrator with a sequence of steps
     
-    orchestrator.run(
+    sq.run(
         [
             DatabaseStepExample()
         ]
