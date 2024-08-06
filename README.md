@@ -1,34 +1,40 @@
-ETL Automation Tool
-Description
-This tool is designed to streamline and automate ETL (Extract, Transform, Load) processes sequentially. It provides a comprehensive analytical package that centralizes all ETL tasks in one place, simplifying the management and optimization of data workflows.
+# ETL Automation Tool
 
-Features
-Sequential Automation: Orders and automates all ETL processes sequentially.
-Centralized Analytics: Offers a unified environment for managing all analytical tasks.
-User-Friendly Interface: Includes an intuitive and easy-to-use interface.
-Scalability: Handles large volumes of data efficiently.
-Flexibility: Allows customization and extension based on user needs.
-Installation
-Clone the repository:
-bash
-Copiar código
-git clone https://github.com/username/etl-automation-tool.git
-Navigate to the project directory:
-bash
-Copiar código
-cd etl-automation-tool
-Install the necessary dependencies:
-bash
-Copiar código
-pip install -r requirements.txt
-Usage
-Configure your ETL tasks in the configuration file.
-Run the tool:
-bash
-Copiar código
-python main.py
-Contributing
-Contributions are welcome! Feel free to open issues and pull requests to enhance this tool.
+![ETL Automation](https://img.shields.io/badge/ETL-Automation-brightgreen)
 
-License
+## 🚀 Description
+
+The **ETL Automation Tool** is designed to streamline and automate ETL (Extract, Transform, Load) processes in a sequential manner. This tool provides a comprehensive analytical package that centralizes all ETL tasks, simplifying data workflow management and optimization.
+
+## 🌟 Key Features
+
+- **Sequential ETL Automation:** Automatically processes ETL tasks in a sequential order.
+- **Centralized Analytics:** Consolidates all analytical tasks into a unified environment.
+- **User-Friendly Interface:** Intuitive and easy-to-navigate UI.
+- **Scalability:** Efficiently handles large volumes of data.
+- **Customizable:** Extensible to fit specific user needs.
+
+## 📥 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/username/etl-automation-tool.git
+2. **Navigate to the project directory:**
+   ```bash
+   cd etl-automation-tool
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+
+## ⚙️ Usage
+
+1. **Configure your ETL tasks in the config.yaml file.**
+2. **Run the tool:**
+   ```bash
+   python main.py
+
+## 🤝 Contributing
+Contributions are welcome! If you have suggestions or improvements, please feel free to open issues or submit pull requests.
+
+## 📄 License
 This project is licensed under the MIT License. See the LICENSE file for details.
