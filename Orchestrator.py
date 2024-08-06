@@ -1,7 +1,9 @@
 import os
 import json
 from Step import Step
-
+import datetime
+import inspect
+from utils.createStepConfig import createStepConfig
 class Orchestrator:
     """
     Orchestrator class that manages and executes a sequence of steps.
@@ -13,7 +15,20 @@ class Orchestrator:
         """
         self._steps = []  # List to store steps
         
+    def validateInitialization(self):
+        for step in self._steps:
+            createStepConfig(step.__class__.__name__)
+            if not isinstance(step, Step):
+                raise ValueError(f"All objects must be instances of Step, received {type(step)}.")
+                    
+            if True in [True if "execute" in item[0] else False if inspect.ismethod(item[1]) else None for item in inspect.getmembers(step)]:
+                step.execute()
+            else:
+                print(f"Does not exist in step: {step.__class__.__name__} a method 'execute' necessary to run the orchestrator")
+        
     def run(self, steps):
+        
+        self._steps = steps
         """
         Executes each step in the provided list of steps.
 
@@ -27,27 +42,22 @@ class Orchestrator:
         config_dict = {"config": {}}
         try:
             if "config.json" not in os.listdir(config_path):
-                host = input("Enter the database host (default localhost): ") or "localhost"
-                port = input("Enter the database port (default 3306): ") or "3306"
-                user = input("Enter the database user: ")
-                password = input("Enter the database password: ")
-                database = input("Enter the database name: ")
+                author = input("Enter your author name: ")
+                project_name = input("Enter the name of your project: ") 
                 
-                config_dict["global"] = {
-                    "host": host,
-                    "port": port,
-                    "user": user,
-                    "password": password,
-                    "database": database
-                }
+                config_dict["config"].update({"global":{
+                    "author": author,
+                    "project_name": project_name,
+                    "date": str(datetime.datetime.now())
+                    }
+                })
                 
                 with open(os.path.join(config_path,"config.json"), "w") as file:
                     json.dump(config_dict, file)
-                    
+                
+                self.validateInitialization()
             else:
-                for step in steps:
-                    if not isinstance(step, Step):
-                        raise ValueError(f"All objects must be instances of Step, but received {type(step)}.")
-                    step.execute()
+                self.validateInitialization()
+                    
         except Exception as e:
             print(f"Error executing: {e}")

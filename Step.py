@@ -29,8 +29,7 @@ class Step:
         self.userInputs = {}
         self.kwarg = {}
                     
-        createStepConfig(self.__class__.__name__)
-    
+        
     def getStepConfig(self):
         """
         Retrieves the configuration specific to the current step.

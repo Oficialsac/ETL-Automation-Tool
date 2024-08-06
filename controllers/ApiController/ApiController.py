@@ -18,6 +18,7 @@ class RunApiServer():
         self.server_name = server_name
         self.params = kwargs
         self.etls = {}
+        self.app = app
 
     def setApiData(self, data):
         if not __list.isEmpty():
@@ -25,20 +26,9 @@ class RunApiServer():
         __list.addFirst(data)
         
     @app.get('/')
-    async def getSwaggerPath():
+    async def __getSwaggerPath():
         response = RedirectResponse(url="/docs")
         return response
-    
-    @app.get('/etls')
-    async def get_etls():
-        try:         
-            if __list.count() != 0:
-                return __list.getData()
-            else:
-                return {"message": "No ETLs set"}
-        except Exception as e:
-            print(f"GET failed {e}")
-            return {"error": str(e)}
         
     def run(self):
         try: 

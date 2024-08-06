@@ -13,7 +13,6 @@ class Config():
             dict: The configuration dictionary.
         """
         configPath = os.path.join(os.getcwd(), 'statics')  
-        print(os.listdir(configPath))
         if "config.json" in os.listdir(configPath): 
             with open(os.path.join(configPath,"config.json"), 'r') as f: 
                 self.config["config"] = json.load(f)  
