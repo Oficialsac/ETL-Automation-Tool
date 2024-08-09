@@ -9,6 +9,7 @@ from utils.createStepConfig import createStepConfig
 import utils 
 from controllers.ApiController.ApiController import RunApiServer
 from controllers.SqlController.SqlController import SqlController
+import plotly.express as px
 
 class Step:
     """
@@ -109,7 +110,54 @@ class Step:
     
         app = RunApiServer(self.userInputs['server_name'], kwargs=self.kwarg)
         return app
+    
             
+    def basicDataInformation(self, data):
+        
+        print("----- Exploratory Analysis (Basic information) -----")
+        print("--------------------------------")
+        print(f"The size of data is: {data.shape}")
+        print(f"The number of columns of data is: {data.columns.shape[0]}")
+        print(f"The names of columns of data are: {data.columns.to_list()}")
+
+        print("\n----- Columns Types -----")
+        print("-----------------------------------")
+        
+        data_types = [(column,"string") if data[column].dtype == "O" else (column,"numerical") for column in data.columns]
+        print(data_types)
+
+        print("\n----- Missing Values Analysis -----")
+        print("-----------------------------------")
+
+        for column in data.columns:
+            missing_values = data[column].isna().sum()
+            if missing_values > 0:
+                print(f"Column '{column}' has {missing_values} missing values.")
+            else:
+                print(f"Column '{column}' does not have missing values.")
+                
+        print("\n----- Relationship Between Columns -----")
+        print("-----------------------------------")
+        
+        correlation_table = data.corr(numeric_only=True)
+        if correlation_table.shape[0] > 1:
+            print(correlation_table)
+            print("\n----- Correlation Insigth -----")
+            print("-----------------------------------")
+            for i, row in enumerate(correlation_table):
+                for j, column in enumerate(correlation_table):
+                    if not i == j:
+                        if correlation_table[row][column] >= 0.7 or correlation_table[row][column] <= -0.7:
+                            print(f"\n\t-- The correlation between {row} and {column} is linearly Strong: {correlation_table[row] [column]}")
+                        else:
+                            print(f"\n\t-- The correlation between {row} and {column} is linearly Weak: {correlation_table[row] [column]}")
+        else: 
+            print(correlation_table)
+
+        print("\n----- Data -----")
+        print("-----------------------------------")
+        
+        print(data.iloc[0:1])
             
                 
 

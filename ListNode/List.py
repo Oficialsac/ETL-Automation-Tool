@@ -9,12 +9,13 @@ class List():
         
     def addFirst(self, data):
         self.first = Node(data)
-    
+            
     def deleteNode(self):
         if self.isEmpty() == False:
             self.first = self.first.getLink()   
             return True
         return False
+    
     def count(self):
         i = 0
         aux = self.first

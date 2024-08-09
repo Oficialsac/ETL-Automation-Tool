@@ -6,14 +6,14 @@ import inspect
 from utils.createStepConfig import createStepConfig
 class Sequencer:
     """
-    Orchestrator class that manages and executes a sequence of steps.
+    Class that manages and executes a sequence of steps.
     """
     
     def __init__(self):
         """
-        Initializes an instance of the Orchestrator class.
+        Initializes an instance of the Sequencer class.
         """
-        self._steps = []  # List to store steps
+        self._steps = []
         
     def validateInitialization(self):
         for step in self._steps:
@@ -24,7 +24,7 @@ class Sequencer:
             if True in [True if "execute" in item[0] else False if inspect.ismethod(item[1]) else None for item in inspect.getmembers(step)]:
                 step.execute()
             else:
-                print(f"Does not exist in step: {step.__class__.__name__} a method 'execute' necessary to run the orchestrator")
+                print(f"Does not exist in step: {step.__class__.__name__} a method 'execute' necessary to run the Sequencer")
         
     def run(self, steps):
         

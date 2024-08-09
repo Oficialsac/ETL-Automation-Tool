@@ -2,6 +2,10 @@ from Step import Step
 from Sequencer import Sequencer  
 import pandas as pd
 from controllers.ApiController.ApiController import RunApiServer
+import os
+import plotly.express as px 
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Initialize an instance of the Orchestrator class
 sq = Sequencer()
@@ -92,12 +96,50 @@ class DatabaseStepExample(Step):
         sql_engine = self.getSql()
         print(sql_engine.query("SELECT * FROM accion"))
         
+class LoadStepData(Step):
+    
+    def execute(self):
+        try:
+            filesPath = os.path.join(os.getcwd(),"statics", "files", "archive")
+            data_dict = {}
+            if len(os.listdir(filesPath)) > 1:
+                for data in os.listdir(filesPath):
+                    if data.endswith(".csv"):
+                        df_name = "_".join(("".join(data.lower().split(".")[:-1])).split(" "))
+                        df = pd.read_csv(os.path.join(filesPath, data))
+                        data_dict[df_name] = df
+                        
+                self.setData(data_dict)
+        except Exception as e:
+            print(f"Error {e}")
+            
+class ExploratoryAnalysis(Step):
+    
+    def basicPlotting(self, data):
+        
+        for column in data.columns:
+            if data[column].dtype != 'object':
+                # print(f"Column {column}")
+                plotData = data
+                
+                plt = px.histogram(plotData, x=column)
+                plt.show()
+    
+    def execute(self):
+        df = self.getData()['data']   
+        
+        df = df['depression_data']
+        print(df.describe())
+        self.basicDataInformation(df)
+        
+        self.basicPlotting(df)
+    
 
 if __name__ == '__main__':
-    # Run the orchestrator with a sequence of steps
     
     sq.run(
         [
-            DatabaseStepExample()
+            LoadStepData(),
+            ExploratoryAnalysis()
         ]
     )
